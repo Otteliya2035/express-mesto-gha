@@ -1,4 +1,4 @@
-const Card = require("../models/card");
+const Card = require('../models/card');
 
 // Получить все карточки
 const getAllCards = (req, res) => {
@@ -6,8 +6,8 @@ const getAllCards = (req, res) => {
     .then((cards) => {
       res.send(cards);
     })
-    .catch((error) => {
-      res.status(500).send({ error: "Internal server error" });
+    .catch((err) => {
+      res.status(500).send({ message: err.message });
     });
 };
 
@@ -18,8 +18,8 @@ const createCard = (req, res) => {
     .then((card) => {
       res.status(201).send(card);
     })
-    .catch((error) => {
-      res.status(500).send({ error: "Internal server error" });
+    .catch((err) => {
+      res.status(500).send({ message: err.message });
     });
 };
 
@@ -29,12 +29,12 @@ const deleteCard = (req, res) => {
   Card.findByIdAndRemove(cardId)
     .then((card) => {
       if (!card) {
-        return res.status(404).send({ error: "Card not found" });
+        return res.status(404).send({ error: 'Card not found' });
       }
-      res.send(card);
+      return res.send(card);
     })
-    .catch((error) => {
-      res.status(500).send({ error: "Internal server error" });
+    .catch((err) => {
+      res.status(500).send({ message: err.message });
     });
 };
 
@@ -43,13 +43,13 @@ const likeCard = (req, res) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $addToSet: { likes: req.user._id } },
-    { new: true }
+    { new: true },
   )
     .then((card) => {
       res.send(card);
     })
-    .catch((error) => {
-      res.status(500).send({ error: "Internal server error" });
+    .catch((err) => {
+      res.status(500).send({ message: err.message });
     });
 };
 
@@ -58,16 +58,15 @@ const dislikeCard = (req, res) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $pull: { likes: req.user._id } },
-    { new: true }
+    { new: true },
   )
     .then((card) => {
       res.send(card);
     })
-    .catch((error) => {
-      res.status(500).send({ error: "Internal server error" });
+    .catch((err) => {
+      res.status(500).send({ message: err.message });
     });
 };
-
 module.exports = {
   getAllCards,
   createCard,

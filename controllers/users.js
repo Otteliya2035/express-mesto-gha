@@ -45,13 +45,13 @@ const updateUserProfile = (req, res) => {
   User.findByIdAndUpdate(
     req.user._id,
     { name, about },
-    { new: true }
+    { new: true },
   )
     .then((user) => {
-      res.json(user);
+      res.send(user);
     })
-    .catch((error) => {
-      res.status(500).json({ error: 'Internal server error' });
+    .catch((err) => {
+      res.status(500).send({ message: err.message });
     });
 };
 
@@ -61,13 +61,13 @@ const updateUserAvatar = (req, res) => {
   User.findByIdAndUpdate(
     req.user._id,
     { avatar },
-    { new: true }
+    { new: true },
   )
     .then((user) => {
       res.json(user);
     })
-    .catch((error) => {
-      res.status(500).json({ error: 'Internal server error' });
+    .catch((err) => {
+      res.status(500).send({ message: err.message });
     });
 };
 
