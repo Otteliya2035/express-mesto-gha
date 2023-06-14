@@ -10,7 +10,7 @@ const getUsers = (req, res) => {
       if (err.name === 'ValidationError') {
         res.status(400).send({ message: 'Переданы некорректные данные' });
       } else {
-        res.status(500).send({ message: 'На сервере произошла ошибка'});
+        res.status(500).send({ message: 'На сервере произошла ошибка' });
       }
     });
 };
@@ -30,7 +30,7 @@ const getUserById = (req, res) => {
       if (err.name === 'ValidationError') {
         res.status(400).send({ message: 'Переданы некорректные данные' });
       } else {
-        res.status(500).send({ message: 'На сервере произошла ошибка'});
+        res.status(500).send({ message: 'На сервере произошла ошибка' });
       }
     });
 };
@@ -78,7 +78,7 @@ const updateUserAvatar = (req, res) => {
     { new: true },
   )
     .then((user) => {
-      res.status(200).json(user); // Используйте res.json() для отправки JSON-объекта
+      res.status(200).send(user);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {

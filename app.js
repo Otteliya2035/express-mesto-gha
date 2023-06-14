@@ -29,7 +29,7 @@ app.use((req, res, next) => {
 
 const { PORT = 3000 } = process.env;
 app.get('/', (req, res) => {
-  res.send('Hello, world55!');
+  res.send('Hello, world!');
 });
 
 app.listen(PORT, () => {
