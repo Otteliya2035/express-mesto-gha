@@ -10,21 +10,23 @@ const getAllCards = (req, res) => {
       res.status(500).send({ message: err.message });
     });
 };
-
-// Создать карточку
-const createCard = (req, res) => {
+const createCard = (req, res, next) => {
   const { name, link } = req.body;
   Card.create({ name, link })
     .then((card) => {
       res.status(201).send(card);
     })
     .catch((err) => {
-      res.status(500).send({ message: err.message });
+      if (err.name === 'ValidationError') {
+        next(err); // Перенаправляем ошибку в обработчик ошибок
+      } else {
+        res.status(500).send({ message: err.message });
+      }
     });
 };
 
 // Удалить карточку
-const deleteCard = (req, res) => {
+const deleteCard = (req, res, next) => {
   const { cardId } = req.params;
   Card.findByIdAndRemove(cardId)
     .then((card) => {
@@ -34,37 +36,49 @@ const deleteCard = (req, res) => {
       return res.send(card);
     })
     .catch((err) => {
-      res.status(500).send({ message: err.message });
+      if (err.name === 'ValidationError') {
+        next(err);
+      } else {
+        res.status(500).send({ message: err.message });
+      }
     });
 };
 
 // Поставить лайк карточке
-const likeCard = (req, res) => {
+const likeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
-    { $addToSet: { likes: req.user._id } },
+    { $addToSet: { likes: req.user_id } },
     { new: true },
   )
     .then((card) => {
       res.send(card);
     })
     .catch((err) => {
-      res.status(500).send({ message: err.message });
+      if (err.name === 'ValidationError') {
+        next(err);
+      } else {
+        res.status(500).send({ message: err.message });
+      }
     });
 };
 
 // Убрать лайк с карточки
-const dislikeCard = (req, res) => {
+const dislikeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
-    { $pull: { likes: req.user._id } },
+    { $pull: { likes: req.user_id } },
     { new: true },
   )
     .then((card) => {
       res.send(card);
     })
     .catch((err) => {
-      res.status(500).send({ message: err.message });
+      if (err.name === 'ValidationError') {
+        next(err);
+      } else {
+        res.status(500).send({ message: err.message });
+      }
     });
 };
 module.exports = {
