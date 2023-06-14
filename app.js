@@ -3,11 +3,14 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const usersRouter = require('./routes/users');
 
+const cardRoutes = require('./routes/cards');
+
 const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use('/users', usersRouter);
+app.use('/cards', cardRoutes);
 
 mongoose.connect('mongodb://127.0.0.1:27017/mestodb')
   .then(() => {
