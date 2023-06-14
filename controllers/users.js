@@ -7,7 +7,11 @@ const getUsers = (req, res) => {
       res.status(200).send(users);
     })
     .catch((err) => {
-      res.status(500).send({ message: err.message });
+      if (err.name === 'ValidationError') {
+        res.status(400).send({ message: 'Переданы некорректные данные' });
+      } else {
+        res.status(500).send({ message: 'На сервере произошла ошибка'});
+      }
     });
 };
 
@@ -19,11 +23,15 @@ const getUserById = (req, res) => {
       if (user) {
         res.status(200).send(user);
       } else {
-        res.status(404).send({ message: 'User not found' });
+        res.status(404).send({ message: 'Пользователь не найден' });
       }
     })
     .catch((err) => {
-      res.status(500).send({ message: err.message });
+      if (err.name === 'ValidationError') {
+        res.status(400).send({ message: 'Переданы некорректные данные' });
+      } else {
+        res.status(500).send({ message: 'На сервере произошла ошибка'});
+      }
     });
 };
 
@@ -36,9 +44,9 @@ const createUser = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(400).send({ message: err.message }); // Обработка ошибки валидации
+        res.status(400).send({ message: 'Переданы некорректные данные' }); // Обработка ошибки валидации
       } else {
-        res.status(500).send({ message: err.message }); // Обработка других ошибок
+        res.status(500).send({ message: 'На сервере произошла ошибка' }); // Обработка других ошибок
       }
     });
 };
@@ -46,26 +54,19 @@ const createUser = (req, res) => {
 // Обновление профиля пользователя
 const updateUserProfile = (req, res) => {
   const { name, about } = req.body;
-  const userId = req.user_id;
   User.findByIdAndUpdate(
-    userId,
+    req.user_id,
     { name, about },
     { new: true },
-  )
-    .then((user) => {
-      if (user) {
-        res.status(200).send(user);
-      } else {
-        res.status(404).send({ message: 'User not found' });
-      }
-    })
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        res.status(400).send({ message: err.message }); // Обработка ошибки валидации
-      } else {
-        res.status(500).send({ message: err.message }); // Обработка других ошибок
-      }
-    });
+  ).then((user) => {
+    res.status(200).send(user);
+  }).catch((err) => {
+    if (err.name === 'ValidationError') {
+      res.status(400).send({ message: 'Переданы некорректные данные' }); // Обработка ошибки валидации
+    } else {
+      res.status(500).send({ message: 'На сервере произошла ошибка' }); // Обработка других ошибок
+    }
+  });
 };
 
 // Обновление аватара пользователя
@@ -77,13 +78,13 @@ const updateUserAvatar = (req, res) => {
     { new: true },
   )
     .then((user) => {
-      res.status(200).send(user);
+      res.status(200).json(user); // Используйте res.json() для отправки JSON-объекта
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(400).send({ message: err.message }); // Обработка ошибки валидации
+        res.status(400).send({ message: 'Переданы некорректные данные' }); // Обработка ошибки валидации
       } else {
-        res.status(500).send({ message: err.message }); // Обработка других ошибок
+        res.status(500).send({ message: 'На сервере произошла ошибка' }); // Обработка других ошибок
       }
     });
 };
