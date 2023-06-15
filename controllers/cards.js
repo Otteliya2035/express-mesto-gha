@@ -21,8 +21,8 @@ const createCard = (req, res) => {
   // Предположим, что у вас есть текущий пользователь и вы можете получить его ObjectId
 
   Card.create({ name, link, owner })
-    .then((card) => {
-      res.status(201).send(card);
+    .then((cards) => {
+      res.status(201).send(cards);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -59,8 +59,8 @@ const likeCard = (req, res) => {
     { $addToSet: { likes: req.user_id } },
     { new: true },
   )
-    .then((card) => {
-      res.status(200).send(card);
+    .then((cards) => {
+      res.status(200).send(cards);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -78,8 +78,8 @@ const dislikeCard = (req, res) => {
     { $pull: { likes: req.user_id } },
     { new: true },
   )
-    .then((card) => {
-      res.status(200).send(card);
+    .then((cards) => {
+      res.status(200).send(cards);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {

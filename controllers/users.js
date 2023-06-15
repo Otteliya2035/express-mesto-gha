@@ -62,9 +62,15 @@ const updateUserProfile = (req, res) => {
     res.status(200).send(user);
   }).catch((err) => {
     if (err.name === 'ValidationError') {
-      res.status(400).send({ message: 'Переданы некорректные данные' }); // Обработка ошибки валидации
+      if (err.errors.name) {
+        res.status(400).json({ message: 'Некорректное имя' });
+      } else if (err.errors.about) {
+        res.status(400).json({ message: 'Некорректная информация о себе' });
+      } else {
+        res.status(400).json({ message: 'Переданы некорректные данные' });
+      }
     } else {
-      res.status(500).send({ message: 'На сервере произошла ошибка' }); // Обработка других ошибок
+      res.status(500).json({ message: 'На сервере произошла ошибка' });
     }
   });
 };
@@ -82,9 +88,13 @@ const updateUserAvatar = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(400).send({ message: 'Переданы некорректные данные' }); // Обработка ошибки валидации
+        if (err.errors.avatar) {
+          res.status(400).json({ message: 'Некорректый аватар' });
+        } else {
+          res.status(400).json({ message: 'Переданы некорректные данные' });
+        }
       } else {
-        res.status(500).send({ message: 'На сервере произошла ошибка' }); // Обработка других ошибок
+        res.status(500).json({ message: 'На сервере произошла ошибка' });
       }
     });
 };
