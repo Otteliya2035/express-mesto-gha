@@ -18,7 +18,6 @@ const getAllCards = (req, res) => {
 const createCard = (req, res) => {
   const { name, link } = req.body;
   const owner = req.user_id;
-  // Предположим, что у вас есть текущий пользователь и вы можете получить его ObjectId
 
   Card.create({ name, link, owner })
     .then((cards) => {
@@ -57,7 +56,10 @@ const likeCard = (req, res) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $addToSet: { likes: req.user_id } },
-    { new: true },
+    {
+      new: true,
+      runValidators: true,
+    },
   )
     .then((cards) => {
       res.status(200).send(cards);
@@ -76,7 +78,10 @@ const dislikeCard = (req, res) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $pull: { likes: req.user_id } },
-    { new: true },
+    {
+      new: true,
+      runValidators: true,
+    },
   )
     .then((cards) => {
       res.status(200).send(cards);
