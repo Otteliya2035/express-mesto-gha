@@ -63,6 +63,9 @@ const likeCard = (req, res) => {
     },
   )
     .then((cards) => {
+      if (!cards) {
+        res.status(404).send({ message: 'Карточки не найдены' });
+      }
       res.status(200).send(cards);
     })
     .catch((err) => {
@@ -85,6 +88,9 @@ const dislikeCard = (req, res) => {
     },
   )
     .then((cards) => {
+      if (!cards) {
+        res.status(404).send({ message: 'Нет такой карточки' });
+      }
       res.status(200).send(cards);
     })
     .catch((err) => {
