@@ -27,8 +27,6 @@ mongoose.connect('mongodb://127.0.0.1:27017/mestodb')
     console.error('Error connecting to MongoDB:', error);
   });
 
-
-
 const { PORT = 3000 } = process.env;
 app.get('/', (req, res) => {
   res.send('Hello, world!');

@@ -75,8 +75,8 @@ const updateUserProfile = (req, res) => {
 // Обновление аватара пользователя
 const updateUserAvatar = (req, res) => {
   const { avatar } = req.body;
-  User.findByIdAndUpdate( // cho to tut ne tak
-    req.user._id, // ??????????????? otkuda
+  User.findByIdAndUpdate(
+    req.user._id,
     { avatar },
     {
       new: true,
@@ -84,7 +84,6 @@ const updateUserAvatar = (req, res) => {
     },
   )
     .then((user) => {
-      console.log(user);
       res.status(200).send(user);
     })
     .catch((err) => {
