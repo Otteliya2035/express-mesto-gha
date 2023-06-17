@@ -44,9 +44,9 @@ const createUser = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(400).send({ message: 'Переданы некорректные данные' }); // Обработка ошибки валидации
+        res.status(400).send({ message: 'Переданы некорректные данные' });
       } else {
-        res.status(500).send({ message: 'На сервере произошла ошибка' }); // Обработка других ошибок
+        res.status(500).send({ message: 'На сервере произошла ошибка' });
       }
     });
 };
@@ -55,7 +55,7 @@ const createUser = (req, res) => {
 const updateUserProfile = (req, res) => {
   const { name, about } = req.body;
   User.findByIdAndUpdate(
-    req.user_id,
+    req.user._id,
     { name, about },
     {
       new: true,
@@ -65,9 +65,9 @@ const updateUserProfile = (req, res) => {
     res.status(200).send(user);
   }).catch((err) => {
     if (err.name === 'ValidationError') {
-      res.status(400).json({ message: 'Переданы некорректные данные' }); // Обработка ошибки валидации
+      res.status(400).json({ message: 'Переданы некорректные данные' });
     } else {
-      res.status(500).json({ message: 'На сервере произошла ошибка' }); // Обработка других ошибок
+      res.status(500).json({ message: 'На сервере произошла ошибка' });
     }
   });
 };
@@ -75,8 +75,8 @@ const updateUserProfile = (req, res) => {
 // Обновление аватара пользователя
 const updateUserAvatar = (req, res) => {
   const { avatar } = req.body;
-  User.findByIdAndUpdate(
-    req.user_id,
+  User.findByIdAndUpdate( // cho to tut ne tak
+    req.user._id, // ??????????????? otkuda
     { avatar },
     {
       new: true,
@@ -84,13 +84,14 @@ const updateUserAvatar = (req, res) => {
     },
   )
     .then((user) => {
+      console.log(user);
       res.status(200).send(user);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(400).json({ message: 'Переданы некорректные данные' }); // Обработка ошибки валидации
+        res.status(400).json({ message: 'Переданы некорректные данные' });
       } else {
-        res.status(500).json({ message: 'На сервере произошла ошибка' }); // Обработка других ошибок
+        res.status(500).json({ message: 'На сервере произошла ошибка' });
       }
     });
 };

@@ -17,11 +17,12 @@ const getAllCards = (req, res) => {
 
 const createCard = (req, res) => {
   const { name, link } = req.body;
-  const owner = req.user_id;
+  const owner = req.user._id; // user is undefined
+  console.log(owner);
 
   Card.create({ name, link, owner })
-    .then((cards) => {
-      res.status(201).send(cards);
+    .then((card) => {
+      res.status(201).json({ id: card._id });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -43,7 +44,7 @@ const deleteCard = (req, res) => {
       return res.status(200).send(card);
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err.name === 'ValidationError' || (err.name === 'CastError')) {
         res.status(400).send({ message: 'Переданы некорректные данные' });
       } else {
         res.status(500).send({ message: 'На сервере произошла ошибка' });
@@ -55,7 +56,7 @@ const deleteCard = (req, res) => {
 const likeCard = (req, res) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
-    { $addToSet: { likes: req.user_id } },
+    { $addToSet: { likes: req.user._id } },
     {
       new: true,
       runValidators: true,
@@ -77,7 +78,7 @@ const likeCard = (req, res) => {
 const dislikeCard = (req, res) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
-    { $pull: { likes: req.user_id } },
+    { $pull: { likes: req.user._id } },
     {
       new: true,
       runValidators: true,
