@@ -61,15 +61,19 @@ const updateUserProfile = (req, res) => {
       new: true,
       runValidators: true,
     },
-  ).then((user) => {
-    res.status(200).send(user);
-  }).catch((err) => {
-    if (err.name === 'ValidationError') {
-      res.status(400).json({ message: 'Переданы некорректные данные' });
-    } else {
-      res.status(500).json({ message: 'На сервере произошла ошибка' });
-    }
-  });
+  )
+    .then((user) => {
+      if (!user) {
+        return res.status(404).send({ message: 'Пользователь не найден' });
+      }
+      return res.status(200).send(user);
+    })
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        return res.status(400).json({ message: 'Переданы некорректные данные' });
+      }
+      return res.status(500).json({ message: 'На сервере произошла ошибка' });
+    });
 };
 
 // Обновление аватара пользователя
@@ -84,17 +88,18 @@ const updateUserAvatar = (req, res) => {
     },
   )
     .then((user) => {
-      res.status(200).send(user);
+      if (!user) {
+        return res.status(404).send({ message: 'Пользователь не найден' });
+      }
+      return res.status(200).send(user);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(400).json({ message: 'Переданы некорректные данные' });
-      } else {
-        res.status(500).json({ message: 'На сервере произошла ошибка' });
+        return res.status(400).json({ message: 'Переданы некорректные данные' });
       }
+      return res.status(500).json({ message: 'На сервере произошла ошибка' });
     });
 };
-
 module.exports = {
   updateUserProfile,
   updateUserAvatar,
