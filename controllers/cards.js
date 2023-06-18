@@ -17,12 +17,11 @@ const getAllCards = (req, res) => {
 
 const createCard = (req, res) => {
   const { name, link } = req.body;
-  const owner = req.user._id; // user is undefined
-  console.log(owner);
+  const owner = req.user._id;
 
   Card.create({ name, link, owner })
     .then((card) => {
-      res.status(201).json({ id: card._id });
+      res.status(201).send({ data: card });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
