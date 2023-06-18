@@ -35,10 +35,11 @@ const createCard = (req, res) => {
 // Удалить карточку
 const deleteCard = (req, res) => {
   const { cardId } = req.params;
-  Card.findByIdAndRemove(cardId)
+  const userId = req.user._id;
+  Card.findOneAndRemove({ _id: cardId, owner: userId })
     .then((card) => {
       if (!card) {
-        return res.status(404).send({ error: 'Запрашиваемый пользователь не найден' });
+        return res.status(404).send({ message: 'Карточки не найдены' });
       }
       return res.status(200).send(card);
     })
