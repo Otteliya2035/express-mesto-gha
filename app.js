@@ -16,9 +16,13 @@ app.use((req, res, next) => {
 
   next();
 });
+const handleNotFound = (req, res) => {
+  res.status(404).json({ message: 'Not Found' });
+};
+
 app.use('/users', usersRouter);
 app.use('/cards', cardRoutes);
-
+app.use(handleNotFound);
 mongoose.connect('mongodb://127.0.0.1:27017/mestodb')
   .then(() => {
     console.log('Connected to MongoDB');
