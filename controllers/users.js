@@ -4,7 +4,7 @@ const User = require('../models/user');
 const getUsers = (req, res) => {
   User.find({})
     .then((users) => {
-      res.status(200).send(users);
+      res.send(users);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -21,7 +21,7 @@ const getUserById = (req, res) => {
   User.findById(userId)
     .then((user) => {
       if (user) {
-        res.status(200).send(user);
+        res.send(user);
       } else {
         res.status(404).send({ message: 'Пользователь не найден' });
       }

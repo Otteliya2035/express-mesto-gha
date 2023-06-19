@@ -19,4 +19,4 @@
 
 Ссылка на проект
 
-- https://Otteliya2035.github.io/express-mesto-gha/
+- https://github.com/Otteliya2035/express-mesto-gha/
