@@ -34,6 +34,9 @@ app.use(auth);
 
 // роуты, которым авторизация нужна
 app.use('/cards', require('./routes/cards'));
+app.use('/users', require('./routes/users'));
+app.use('/signup', require('./routes/signup'));
+app.use('/signin', require('./routes/signin'));
 
 // Middleware для обработки ошибок
 app.use(errors()); // Обработчик ошибок от celebrate
