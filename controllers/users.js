@@ -67,8 +67,6 @@ const createUser = (req, res, next) => {
   const {
     name, about, avatar, email, password,
   } = req.body;
-    // Проверка, что name содержит не менее двух символов
-  if (name.length < 2) { next(new BadRequestError('Имя должно содержать не менее двух символов')); }
   bcrypt
     .hash(password, 10)
     .then((hash) => User.create({
