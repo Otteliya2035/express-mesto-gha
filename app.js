@@ -1,7 +1,12 @@
 const express = require('express');
+const { errors } = require('celebrate');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+
 const usersRouter = require('./routes/users');
+
+const { login, createUser } = require('./controllers/users');
+const auth = require('./middlewares/auth');
 
 const cardRoutes = require('./routes/cards');
 
@@ -9,20 +14,66 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use((req, res, next) => {
-  req.user = {
-    _id: '64886d4f1e6fc3961753e62e',
-  };
-
-  next();
-});
 const handleNotFound = (req, res) => {
   res.status(404).json({ message: 'Not Found' });
 };
+app.post('/signin', login);
+app.post('/signup', createUser);
 
 app.use('/users', usersRouter);
 app.use('/cards', cardRoutes);
 app.use(handleNotFound);
+// авторизация
+app.use(auth);
+
+// роуты, которым авторизация нужна
+app.use('/cards', require('./routes/cards'));
+
+// Middleware для обработки ошибок
+app.use(errors()); // Обработчик ошибок от celebrate
+
+app.use((err, req, res, next) => {
+  let statusCode = 500;
+  let message = 'Внутренняя ошибка сервера';
+
+  if (err.joi) {
+    // Ошибка валидации от celebrate
+    statusCode = 400;
+    message = err.joi.message;
+  } else if (err.code === 11000) {
+    // Ошибка дублирования ключа
+    statusCode = 409;
+    message = 'Ошибка дублирования ключа';
+  }
+
+  res.status(statusCode).json({ message });
+});
+app.use((err, req, res, next) => {
+  let statusCode = 500;
+  let message = 'Внутренняя ошибка сервера';
+
+  if (err instanceof UnauthorizedError) {
+    statusCode = err.statusCode;
+    message = err.message;
+  } else if (err instanceof ForbiddenError) {
+    statusCode = err.statusCode;
+    message = err.message;
+  } else if (err instanceof ConflictError) {
+    statusCode = err.statusCode;
+    message = err.message;
+  } else if (err.joi) {
+    // Ошибка валидации от celebrate
+    statusCode = 400;
+    message = err.joi.message;
+  } else if (err.code === 11000) {
+    // Ошибка дублирования ключа
+    statusCode = 409;
+    message = 'Ошибка дублирования ключа';
+  }
+
+  res.status(statusCode).json({ message });
+});
+
 mongoose.connect('mongodb://127.0.0.1:27017/mestodb')
   .then(() => {
     console.log('Connected to MongoDB');
