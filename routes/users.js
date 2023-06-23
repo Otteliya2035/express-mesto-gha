@@ -2,7 +2,8 @@ const express = require('express');
 
 const router = express.Router();
 const userController = require('../controllers/users');
-const { celebrate, Joi } = require('celebrate');
+
+const { celebrate, Joi } = require('celebrate', 'Joi');
 
 // Роут для получения всех пользователей
 router.get('/', userController.getUsers);
@@ -12,8 +13,7 @@ router.get('/:userId', celebrate({
   params: Joi.object().keys({
     userId: Joi.string().required(),
   }),
-}), userController.getUserById); //что должно быть еще у id?
-
+}), userController.getUserById);
 // Роут для получения информации о текущем пользователе
 router.get('/me', userController.getCurrentUser);
 

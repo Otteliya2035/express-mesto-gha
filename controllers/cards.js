@@ -1,7 +1,7 @@
 const { BadRequestError } = require('../errors/BadRequestError');
 const { NotFoundError } = require('../errors/NotFoundError');
-const { InternalServerError } = require('../errors/InternalServerError')
-
+const { InternalServerError } = require('../errors/InternalServerError');
+const { ForbiddenError } = require('../errors/ForbiddenError');
 const Card = require('../models/card');
 
 // Получить все карточки
@@ -51,6 +51,8 @@ const deleteCard = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
         next(new BadRequestError('Переданы некорректные данные'));
+      } else if (err.name === 'ForbiddenError') {
+        next(new ForbiddenError('Нет прав доступа'));
       } else {
         next(new InternalServerError('На сервере произошла ошибка'));
       }

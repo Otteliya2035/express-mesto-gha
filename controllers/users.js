@@ -5,7 +5,9 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const { BadRequestError } = require('../errors/BadRequestError');
 const { NotFoundError } = require('../errors/NotFoundError');
-const { InternalServerError} = require('../errors/InternalServerError')
+const { InternalServerError } = require('../errors/InternalServerError');
+const { ConflictError } = require('../errors/ConflictError');
+const { UnauthorizedError } = require('../errors/UnauthorizedError');
 
 // Получение всех пользователей
 const getUsers = (req, res, next) => {
@@ -54,7 +56,7 @@ const getCurrentUser = (req, res, next) => {
         res.send(user);
       }
     })
-    .catch((err) => {
+    .catch(() => {
       const error = new InternalServerError('На сервере произошла ошибка');
       next(error); // Передаем ошибку обработчику ошибок
     });
@@ -63,17 +65,21 @@ const getCurrentUser = (req, res, next) => {
 // Создание пользователя
 const createUser = (req, res, next) => {
   const {
-    name, about, avatar, email, password
+    name, about, avatar, email, password,
   } = req.body;
   bcrypt
     .hash(password, 10)
-    .then((hash) => User.create({ name, about, avatar, email, password: hash }))
+    .then((hash) => User.create({
+      name, about, avatar, email, password: hash,
+    }))
     .then((user) => {
       res.status(201).send(user);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new BadRequestError('Переданы некорректные данные'));
+      } else if (err.code === 11000) {
+        next(new ConflictError('Пользователь с таким email уже существует'));
       } else {
         next(new InternalServerError('На сервере произошла ошибка'));
       }
@@ -138,15 +144,14 @@ const login = (req, res) => {
   return User.findUserByCredentials(email, password)
     .then((user) => {
       // создадим токен
-      const token = jwt.sign({ _id: '64886d4f1e6fc3961753e62e' }, 'some-secret-key', { expiresIn: '7d' });
+      const token = jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: '7d' });
 
       // вернём токен
       res.send({ token });
     })
     .catch((err) => {
-      res
-        .status(401)
-        .send({ message: err.message });
+      const unauthorizedError = new UnauthorizedError(err.message);
+      res.status(unauthorizedError.statusCode).send({ message: unauthorizedError.message });
     });
 };
 module.exports = {

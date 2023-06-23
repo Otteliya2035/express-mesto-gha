@@ -11,6 +11,12 @@ const auth = require('./middlewares/auth');
 const cardRoutes = require('./routes/cards');
 
 const app = express();
+
+const { UnauthorizedError } = require('./errors/UnauthorizedError');
+
+const { ConflictError } = require('./errors/ConflictError');
+const { ForbiddenError } = require('./errors/ForbiddenError');
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -32,7 +38,7 @@ app.use('/cards', require('./routes/cards'));
 // Middleware для обработки ошибок
 app.use(errors()); // Обработчик ошибок от celebrate
 
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
   let statusCode = 500;
   let message = 'Внутренняя ошибка сервера';
 
@@ -48,7 +54,7 @@ app.use((err, req, res, next) => {
 
   res.status(statusCode).json({ message });
 });
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
   let statusCode = 500;
   let message = 'Внутренняя ошибка сервера';
 
