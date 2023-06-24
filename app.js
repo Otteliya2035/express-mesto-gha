@@ -26,12 +26,11 @@ const handleNotFound = (req, res) => {
 app.post('/signin', login);
 app.post('/signup', createUser);
 
-app.use('/', auth, usersRouter);
-app.use('/', auth, cardRoutes);
-app.use(handleNotFound);
-// авторизация
 app.use(auth);
+app.use('/', usersRouter);
+app.use('/', cardRoutes);
 
+app.use(handleNotFound);
 // Middleware для обработки ошибок
 app.use(errors()); // Обработчик ошибок от celebrate
 
