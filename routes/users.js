@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/users');
 
-const { celebrate, Joi } = require('celebrate');
+const { celebrate, Joi } = require('celebrate', 'Joi');
 
 // Роут для получения всех пользователей
 router.get('/', userController.getUsers);

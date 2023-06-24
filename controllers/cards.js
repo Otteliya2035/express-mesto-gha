@@ -13,8 +13,6 @@ const getAllCards = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new BadRequestError('Переданы некорректные данные'));
-      } else {
-        next(new InternalServerError('На сервере произошла ошибка'));
       }
     });
 };
@@ -30,8 +28,6 @@ const createCard = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new BadRequestError('Переданы некорректные данные'));
-      } else {
-        next(new InternalServerError('На сервере произошла ошибка'));
       }
     });
 };
@@ -53,8 +49,6 @@ const deleteCard = (req, res, next) => {
         next(new BadRequestError('Переданы некорректные данные'));
       } else if (err.name === 'ForbiddenError') {
         next(new ForbiddenError('Нет прав доступа'));
-      } else {
-        next(new InternalServerError('На сервере произошла ошибка'));
       }
     });
 };
@@ -79,8 +73,6 @@ const likeCard = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
         next(new BadRequestError('Переданы некорректные данные'));
-      } else {
-        next(new InternalServerError('На сервере произошла ошибка'));
       }
     });
 };
@@ -105,8 +97,6 @@ const dislikeCard = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
         next(new BadRequestError('Переданы некорректные данные'));
-      } else {
-        next(new InternalServerError('На сервере произошла ошибка'));
       }
     });
 };
