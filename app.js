@@ -22,9 +22,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.post('/signin', login);
 app.post('/signup', createUser);
 
-app.use(auth);
-app.use('/', usersRouter);
-app.use('/', cardRoutes);
+app.use('/', auth, usersRouter);
+app.use('/', auth, cardRoutes);
 
 // Middleware для обработки ошибок
 app.use(errors()); // Обработчик ошибок от celebrate
