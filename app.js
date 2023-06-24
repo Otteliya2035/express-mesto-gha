@@ -34,7 +34,7 @@ app.use(handleNotFound);
 // Middleware для обработки ошибок
 app.use(errors()); // Обработчик ошибок от celebrate
 
-app.use((err, req, res) => {
+app.use((err, req, res, next) => {
   let statusCode = 500;
   let message = 'Внутренняя ошибка сервера';
 
@@ -49,8 +49,10 @@ app.use((err, req, res) => {
   }
 
   res.status(statusCode).json({ message });
+  next(); // Передаем управление следующему обработчику ошибок
 });
-app.use((err, req, res) => {
+
+app.use((err, req, res, next) => {
   let statusCode = 500;
   let message = 'Внутренняя ошибка сервера';
 
@@ -74,6 +76,7 @@ app.use((err, req, res) => {
   }
 
   res.status(statusCode).json({ message });
+  next(); 
 });
 
 mongoose.connect('mongodb://127.0.0.1:27017/mestodb')
