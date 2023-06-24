@@ -20,9 +20,10 @@ const { ForbiddenError } = require('./errors/ForbiddenError');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-const handleNotFound = (req, res) => {
+app.use((req, res, next) => {
   res.status(404).json({ message: 'Not Found' });
-};
+  next();
+});
 app.post('/signin', login);
 app.post('/signup', createUser);
 
@@ -30,7 +31,6 @@ app.use(auth);
 app.use('/', usersRouter);
 app.use('/', cardRoutes);
 
-app.use(handleNotFound);
 // Middleware для обработки ошибок
 app.use(errors()); // Обработчик ошибок от celebrate
 
@@ -76,7 +76,7 @@ app.use((err, req, res, next) => {
   }
 
   res.status(statusCode).json({ message });
-  next(); 
+  next();
 });
 
 mongoose.connect('mongodb://127.0.0.1:27017/mestodb')
