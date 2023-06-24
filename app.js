@@ -26,17 +26,11 @@ const handleNotFound = (req, res) => {
 app.post('/signin', login);
 app.post('/signup', createUser);
 
-app.use('/users', usersRouter);
-app.use('/cards', cardRoutes);
+app.use('/', auth, usersRouter);
+app.use('/', auth, cardRoutes);
 app.use(handleNotFound);
 // авторизация
 app.use(auth);
-
-// роуты, которым авторизация нужна
-app.use('/cards', require('./routes/cards'));
-app.use('/users', require('./routes/users'));
-app.use('/', require('./routes/signup'));
-app.use('/', require('./routes/signin'));
 
 // Middleware для обработки ошибок
 app.use(errors()); // Обработчик ошибок от celebrate

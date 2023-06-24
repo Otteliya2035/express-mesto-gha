@@ -1,6 +1,6 @@
 const router = require('express').Router();
 
-const { celebrate, Joi } = require('celebrate', 'Joi');
+const { celebrate, Joi } = require('celebrate');
 const userController = require('../controllers/users');
 
 // Роут для создания пользователя
