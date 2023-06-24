@@ -1,4 +1,4 @@
-const { celebrate, Joi } = require('celebrate', 'Joi');
+const { celebrate, Joi } = require('celebrate');
 
 const router = require('express').Router();
 
