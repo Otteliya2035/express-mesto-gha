@@ -13,17 +13,12 @@ const cardRoutes = require('./routes/cards');
 const app = express();
 
 const { UnauthorizedError } = require('./errors/UnauthorizedError');
-
 const { ConflictError } = require('./errors/ConflictError');
 const { ForbiddenError } = require('./errors/ForbiddenError');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use((req, res, next) => {
-  res.status(404).json({ message: 'Not Found' });
-  next();
-});
 app.post('/signin', login);
 app.post('/signup', createUser);
 
@@ -33,24 +28,6 @@ app.use('/', cardRoutes);
 
 // Middleware для обработки ошибок
 app.use(errors()); // Обработчик ошибок от celebrate
-
-app.use((err, req, res, next) => {
-  let statusCode = 500;
-  let message = 'Внутренняя ошибка сервера';
-
-  if (err.joi) {
-    // Ошибка валидации от celebrate
-    statusCode = 400;
-    message = err.joi.message;
-  } else if (err.code === 11000) {
-    // Ошибка дублирования ключа
-    statusCode = 409;
-    message = 'Ошибка дублирования ключа';
-  }
-
-  res.status(statusCode).json({ message });
-  next(); // Передаем управление следующему обработчику ошибок
-});
 
 app.use((err, req, res, next) => {
   let statusCode = 500;
@@ -79,7 +56,8 @@ app.use((err, req, res, next) => {
   next();
 });
 
-mongoose.connect('mongodb://127.0.0.1:27017/mestodb')
+mongoose
+  .connect('mongodb://127.0.0.1:27017/mestodb')
   .then(() => {
     console.log('Connected to MongoDB');
   })
@@ -88,6 +66,7 @@ mongoose.connect('mongodb://127.0.0.1:27017/mestodb')
   });
 
 const { PORT = 3000 } = process.env;
+
 app.get('/', (req, res) => {
   res.send('Hello, world!');
 });
