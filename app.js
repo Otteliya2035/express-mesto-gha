@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
 const usersRouter = require('./routes/users');
-
+const NotFoundError = require('./errors/NotFoundError');
 const { login, createUser } = require('./controllers/users');
 const auth = require('./middlewares/auth');
 
@@ -16,8 +16,8 @@ const signup = require('./routes/signup');
 
 const app = express();
 
-app.use('/users', usersRouter);
-app.use('/cards', cardRoutes);
+app.use('/users', auth, usersRouter);
+app.use('/cards', auth, cardRoutes);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
