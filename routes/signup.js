@@ -1,7 +1,8 @@
 const router = require('express').Router();
 
-const { celebrate, Joi } = require('celebrate', 'Joi');
+const { celebrate, Joi } = require('celebrate');
 const userController = require('../controllers/users');
+const auth = require('../middlewares/auth');
 
 // Роут для создания пользователя
 router.post('/signup', celebrate({
@@ -13,5 +14,6 @@ router.post('/signup', celebrate({
     password: Joi.string().min(8).required(),
   }),
 }), userController.createUser);
+//router.use(auth);
 
 module.exports = router;

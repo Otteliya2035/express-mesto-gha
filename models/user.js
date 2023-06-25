@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 
 const mongoose = require('mongoose');
+
 const validator = require('validator');
 
 const userSchema = new mongoose.Schema({
@@ -53,7 +54,7 @@ userSchema.statics.findUserByCredentials = function (email, password) {
             return Promise.reject(new Error('Неправильные почта или пароль'));
           }
 
-          return user; // теперь user доступен
+          return user;
         });
     });
 };

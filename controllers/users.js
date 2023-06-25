@@ -40,9 +40,9 @@ const getUserById = (req, res, next) => {
 };
 // Контроллер для получения информации о текущем пользователе
 const getCurrentUser = (req, res, next) => {
-  const userId = req.user._id; // Получаем ID текущего пользователя
+  const userId = req.user._id;
 
-  User.findById(userId) // Ищем пользователя по ID
+  User.findById(userId)
     .then((user) => {
       if (!user) {
         const error = new NotFoundError('Пользователь не найден');
@@ -67,13 +67,18 @@ const createUser = (req, res, next) => {
       name, about, avatar, email, password: hash,
     }))
     .then((user) => {
-      res.status(201).send(user);
+      const { _id } = user;
+      res.status(201).send({
+        name, about, avatar, email, _id,
+      });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new BadRequestError('Переданы некорректные данные'));
       } else if (err.code === 11000) {
         next(new ConflictError('Пользователь с таким email уже существует'));
+      } else {
+        next(err);
       }
     });
 };

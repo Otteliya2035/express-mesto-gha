@@ -16,8 +16,8 @@ const signup = require('./routes/signup');
 
 const app = express();
 
-app.use('/', usersRouter);
-app.use('/', cardRoutes);
+app.use('/users', usersRouter);
+app.use('/cards', cardRoutes);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
