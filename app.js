@@ -3,28 +3,26 @@ const { errors } = require('celebrate');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
-const usersRouter = require('./routes/users');
-const NotFoundError = require('./errors/NotFoundError');
 const { login, createUser } = require('./controllers/users');
 const auth = require('./middlewares/auth');
 
 const errorHandler = require('./middlewares/error-hendler');
 
-const cardRoutes = require('./routes/cards');
 const signin = require('./routes/signin');
 const signup = require('./routes/signup');
+const usersRouter = require('./routes/users');
+const cardRoutes = require('./routes/cards');
 
 const app = express();
 
-app.use('/users', auth, usersRouter);
-app.use('/cards', auth, cardRoutes);
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
 app.use(signin);
 app.use(signup);
-app.post('/signin', login);
-app.post('/signup', createUser);
+
+app.use('/', auth, usersRouter);
+app.use('/', auth, cardRoutes);
 
 // Middleware для обработки ошибок
 app.use(errors()); // Обработчик ошибок от celebrate
@@ -45,6 +43,8 @@ app.get('/', (req, res) => {
   res.send('Hello, world!');
 });
 
+app.post('/signin', login);
+app.post('/signup', createUser);
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });

@@ -13,5 +13,4 @@ router.post('/signup', celebrate({
     password: Joi.string().min(8).required(),
   }),
 }), userController.createUser);
-
 module.exports = router;
