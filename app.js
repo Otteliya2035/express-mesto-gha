@@ -22,7 +22,7 @@ app.use(signin);
 app.use(signup);
 
 app.use('/users/', auth, usersRouter);
-app.use('/', auth, cardRoutes);
+app.use('/cards/', auth, cardRoutes);
 
 // Middleware для обработки ошибок
 app.use(errors()); // Обработчик ошибок от celebrate

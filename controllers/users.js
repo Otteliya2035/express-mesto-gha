@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const BadRequestError = require('../errors/BadRequestError');
-const { NotFoundError } = require('../errors/NotFoundError');
+const NotFoundError = require('../errors/NotFoundError');
 const ConflictError = require('../errors/ConflictError');
 
 // Получение всех пользователей
@@ -23,6 +23,8 @@ const getUserById = (req, res, next) => {
   const { userId } = req.params;
   User.findById(userId)
     .then((user) => {
+      console.log(user);
+
       if (user) {
         res.send(user);
       } else {
