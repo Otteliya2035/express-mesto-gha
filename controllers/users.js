@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
-const { BadRequestError } = require('../errors/BadRequestError');
+const BadRequestError = require('../errors/BadRequestError');
 const { NotFoundError } = require('../errors/NotFoundError');
 const ConflictError = require('../errors/ConflictError');
 
@@ -35,6 +35,7 @@ const getUserById = (req, res, next) => {
       }
     });
 };
+
 // Контроллер для получения информации о текущем пользователе
 const getCurrentUser = (req, res, next) => {
   const userId = req.user._id;

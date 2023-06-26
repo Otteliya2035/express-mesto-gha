@@ -21,7 +21,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(signin);
 app.use(signup);
 
-app.use('/', auth, usersRouter);
+app.use('/users/', auth, usersRouter);
 app.use('/', auth, cardRoutes);
 
 // Middleware для обработки ошибок

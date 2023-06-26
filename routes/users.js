@@ -7,14 +7,15 @@ const userController = require('../controllers/users');
 // Роут для получения всех пользователей
 router.get('/', userController.getUsers);
 
+// Роут для получения информации о текущем пользователе
+router.get('/me', userController.getCurrentUser);
+
 // Роут для получения пользователя по _id
 router.get('/:userId', celebrate({
   params: Joi.object().keys({
     userId: Joi.string().required(),
   }),
 }), userController.getUserById);
-// Роут для получения информации о текущем пользователе
-router.get('/me', userController.getCurrentUser);
 
 // Роут для обновления профиля пользователя
 router.patch('/me', celebrate({
