@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 
 const { login, createUser } = require('./controllers/users');
 const auth = require('./middlewares/auth');
-const NotFoundError = require('./errors/NotFoundError');
+
 const errorHandler = require('./middlewares/error-hendler');
 
 const signin = require('./routes/signin');
@@ -42,10 +42,13 @@ const { PORT = 3000 } = process.env;
 app.get('/', (req, res) => {
   res.send('Hello, world!');
 });
-app.use((req, res, next) => {
-  const error = new NotFoundError('Not Found');
-  next(error);
-});
+const handleNotFound = (req, res) => {
+  res.status(404).json({ message: 'Not Found' });
+};
+
+app.use('/users', usersRouter);
+app.use('/cards', cardRoutes);
+app.use(handleNotFound);
 app.post('/signin', login);
 app.post('/signup', createUser);
 app.listen(PORT, () => {
