@@ -19,14 +19,14 @@ router.post('/', celebrate({
 // Роут для удаления карточки по идентификатору
 router.delete('/:cardId', celebrate({
   params: Joi.object().keys({
-    cardId: Joi.string().required(),
+    cardId: Joi.string().required().length(24).hex(),
   }),
 }), cardController.deleteCard);
 
 // Роут для постановки лайка карточке
 router.put('/:cardId/likes', celebrate({
   params: Joi.object().keys({
-    cardId: Joi.string().required(),
+    cardId: Joi.string().required().hex().length(24),
 
   }),
 }), cardController.likeCard);
@@ -34,7 +34,7 @@ router.put('/:cardId/likes', celebrate({
 // Роут для удаления лайка с карточки
 router.delete('/:cardId/likes', celebrate({
   params: Joi.object().keys({
-    cardId: Joi.string().required(),
+    cardId: Joi.string().required().length(24).hex(),
   }),
 }), cardController.dislikeCard);
 module.exports = router;
