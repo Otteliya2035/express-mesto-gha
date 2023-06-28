@@ -41,7 +41,7 @@ const deleteCard = (req, res, next) => {
         next(new NotFoundError('Карточка не найдена'));
       }
       if (card.owner.toString() !== userId) {
-        next(new ForbiddenError('Нет прав доступа')); // some
+        next(new ForbiddenError('Нет прав доступа'));
       }
       return Card.findByIdAndDelete(cardId);
     })
