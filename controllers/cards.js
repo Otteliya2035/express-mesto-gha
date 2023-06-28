@@ -35,25 +35,22 @@ const createCard = (req, res, next) => {
 const deleteCard = (req, res, next) => {
   const { cardId } = req.params;
   const userId = req.user._id;
-
-  Card.findOne({ _id: cardId, owner: userId })
+  Card.findOne({ _id: cardId })
     .then((card) => {
       if (!card) {
         throw new NotFoundError('Карточка не найдена');
       }
-
+      if (card.owner.toString() !== userId) {
+        throw new ForbiddenError('Нет прав доступа');
+      }
       return Card.findByIdAndDelete(cardId);
     })
     .then((deletedCard) => {
       res.status(200).send(deletedCard);
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
         next(new BadRequestError('Переданы некорректные данные'));
-      } else if (err.name === 'ForbiddenError') {
-        next(new ForbiddenError('Нет прав доступа'));
-      } else {
-        next(err);
       }
     });
 };
