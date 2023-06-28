@@ -38,10 +38,10 @@ const deleteCard = (req, res, next) => {
   Card.findOne({ _id: cardId })
     .then((card) => {
       if (!card) {
-        throw new NotFoundError('Карточка не найдена');
+        next(new NotFoundError('Карточка не найдена'));
       }
       if (card.owner.toString() !== userId) {
-        throw new ForbiddenError('Нет прав доступа');
+        next(new ForbiddenError('Нет прав доступа'));
       }
       return Card.findByIdAndDelete(cardId);
     })
