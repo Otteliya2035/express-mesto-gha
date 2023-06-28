@@ -48,10 +48,11 @@ const deleteCard = (req, res, next) => {
         next(new BadRequestError('Переданы некорректные данные'));
       } else if (err.name === 'ForbiddenError') {
         next(new ForbiddenError('Нет прав доступа'));
+      } else {
+        next(err);
       }
     });
 };
-
 // Поставить лайк карточке
 const likeCard = (req, res, next) => {
   Card.findByIdAndUpdate(

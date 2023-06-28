@@ -63,9 +63,20 @@ const createUser = (req, res, next) => {
   } = req.body;
   bcrypt
     .hash(password, 10)
-    .then((hash) => User.create({
-      name, about, avatar, email, password: hash,
-    }))
+    .then((hash) => {
+      const userObject = {
+        about,
+        avatar,
+        email,
+        password: hash,
+      };
+
+      if (name) {
+        userObject.name = name;
+      }
+
+      return User.create(userObject);
+    })
     .then((user) => {
       const { _id } = user;
       res.status(201).send({
@@ -138,7 +149,7 @@ const login = (req, res, next) => {
     .then((user) => {
       // создадим токен
       const token = jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: '7d' });
-      // вернём токен
+      // вернём токенышт
       res.send({ token });
     })
     .catch(next);
