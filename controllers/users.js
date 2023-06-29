@@ -14,7 +14,9 @@ const getUsers = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new BadRequestError('Переданы некорректные данные'));
+        return; // Выход из функции после вызова next
       }
+      next(err); // Обработка ошибки по умолчанию
     });
 };
 
@@ -23,8 +25,6 @@ const getUserById = (req, res, next) => {
   const { userId } = req.params;
   User.findById(userId)
     .then((user) => {
-      console.log(user);
-
       if (user) {
         res.send(user);
       } else {
@@ -34,7 +34,9 @@ const getUserById = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
         next(new BadRequestError('Переданы некорректные данные'));
+        return;
       }
+      next(err);
     });
 };
 
@@ -47,9 +49,9 @@ const getCurrentUser = (req, res, next) => {
       if (!user) {
         const error = new NotFoundError('Пользователь не найден');
         next(error);
-      } else {
-        res.send(user);
+        return;
       }
+      res.send(user);
     })
     .catch((error) => {
       next(error);
@@ -86,14 +88,17 @@ const createUser = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new BadRequestError('Переданы некорректные данные'));
-      } else if (err.code === 11000) {
-        next(new ConflictError('Пользователь с таким email уже существует'));
-      } else {
-        next(err);
+        return;
       }
+
+      if (err.code === 11000) {
+        next(new ConflictError('Пользователь с таким email уже существует'));
+        return;
+      }
+
+      next(err);
     });
 };
-
 // Обновление профиля пользователя
 const updateUserProfile = (req, res, next) => {
   const { name, about } = req.body;
@@ -115,7 +120,9 @@ const updateUserProfile = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new BadRequestError('Переданы некорректные данные'));
+        return;
       }
+      next(err);
     });
 };
 // Обновление аватара пользователя
@@ -139,7 +146,9 @@ const updateUserAvatar = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new BadRequestError('Переданы некорректные данные'));
+        return;
       }
+      next(err);
     });
 };
 const login = (req, res, next) => {
@@ -149,7 +158,7 @@ const login = (req, res, next) => {
     .then((user) => {
       // создадим токен
       const token = jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: '7d' });
-      // вернём токенышт
+      // вернём токен
       res.send({ token });
     })
     .catch(next);

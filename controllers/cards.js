@@ -12,7 +12,9 @@ const getAllCards = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new BadRequestError('Переданы некорректные данные'));
+        return;
       }
+      next(err);
     });
 };
 
@@ -27,7 +29,9 @@ const createCard = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new BadRequestError('Переданы некорректные данные'));
+        return;
       }
+      next(err);
     });
 };
 
@@ -51,7 +55,9 @@ const deleteCard = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
         next(new BadRequestError('Переданы некорректные данные'));
+        return;
       }
+      next(err);
     });
 };
 // Поставить лайк карточке
@@ -74,10 +80,11 @@ const likeCard = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
         next(new BadRequestError('Переданы некорректные данные'));
+        return;
       }
+      next(err);
     });
 };
-
 // Убрать лайк с карточки
 const dislikeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
@@ -98,7 +105,9 @@ const dislikeCard = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
         next(new BadRequestError('Переданы некорректные данные'));
+        return;
       }
+      next(err);
     });
 };
 module.exports = {
