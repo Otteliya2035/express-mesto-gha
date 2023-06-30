@@ -11,10 +11,8 @@ router.use(signupRoutes);
 router.use('/users', auth, userRoutes);
 router.use('/cards', auth, cardRoutes);
 
-router.use('*', (req, res, next) => {
-  // res.status(404).json({ message: 'Not Found' });
-
-  next(new NotFoundError('not found'));
+router.use('*', () => {
+  throw new NotFoundError('not found');
 });
 
 module.exports = router;
