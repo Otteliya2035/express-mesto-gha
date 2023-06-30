@@ -25,9 +25,6 @@ app.use('/cards/', auth, cardRoutes);
 app.get('/', (req, res) => {
   res.send('Hello, world!');
 });
-app.all('*', (req, res) => {
-  res.status(404).json({ message: 'Not Found' });
-});
 
 // Middleware для обработки ошибок
 app.use(errors()); // Обработчик ошибок от celebrate
